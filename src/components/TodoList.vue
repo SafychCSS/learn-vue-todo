@@ -22,13 +22,13 @@
                     </div>
                     <hr>
                     <div class="list-group">
-                        <div v-for="todo in todos" :key="todo.id"
+                        <div v-for="(todo, index) in todos" :key="todo.id"
                             class="todo-list__item list-group-item list-group-item-action d-flex align-items-center shadow-sm">
                             <label class="checkbox flex-grow-1">
                                 <input type="checkbox" class="visibility-hidden checkbox__input">
                                 <span class="checkbox__text">{{ todo.title }}</span>
                             </label>
-                            <button type="button" class="todo-list__item-remove close" aria-label="Close">
+                            <button @click="removeTodo(index)" type="button" class="todo-list__item-remove close" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -74,6 +74,9 @@ export default {
                 prevValue: ''
             });
             this.newTodo = '';
+        },
+        removeTodo(index) {
+            this.todos.splice(index, 1);
         }
     }
 }
