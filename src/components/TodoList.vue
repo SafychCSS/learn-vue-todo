@@ -11,15 +11,22 @@
                                 <span class="checkbox__text">&nbsp;</span>
                             </label>
                         </div>
-                        <input type="text" v-model="newTodo" class="form-control form-control-lg" placeholder="What needs to be done?">
-                        <button type="button" class="btn btn-success todo-list__add">Add</button>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg"
+                            placeholder="What needs to be done?"
+                            v-model="newTodo"
+                            @keyup.enter="addTodo"
+                        >
+                        <button type="button" class="btn btn-success todo-list__add" @click="addTodo">Add</button>
                     </div>
                     <hr>
                     <div class="list-group">
-                        <div class="todo-list__item list-group-item list-group-item-action d-flex align-items-center shadow-sm">
+                        <div v-for="todo in todos" :key="todo.id"
+                            class="todo-list__item list-group-item list-group-item-action d-flex align-items-center shadow-sm">
                             <label class="checkbox flex-grow-1">
                                 <input type="checkbox" class="visibility-hidden checkbox__input">
-                                <span class="checkbox__text">Cras justo odio</span>
+                                <span class="checkbox__text">{{ todo.title }}</span>
                             </label>
                             <button type="button" class="todo-list__item-remove close" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -54,8 +61,21 @@ export default {
                 }
             ]
         }
+    },
+    methods: {
+        /**
+         * Method which adding new todo in todos
+         */
+        addTodo() {
+            this.todos.push({
+                id: this.todos.length + 1,
+                title: this.newTodo,
+                completed: false,
+                prevValue: ''
+            });
+            this.newTodo = '';
+        }
     }
-
 }
 </script>
 

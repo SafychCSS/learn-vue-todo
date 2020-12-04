@@ -41,10 +41,12 @@
     margin: 0;
     padding-top: .75rem;
     padding-bottom: .75rem;
+    font-size: 20px;
+    line-height: 1;
     cursor: pointer;
     &--check-all {
         .checkbox__text {
-            top: -14px;
+            top: -10px;
             left: 5px;
         }
     }
@@ -53,7 +55,7 @@
 
         &::before {
             position: absolute;
-            top: 4px;
+            top: 0;
             left: 0;
             content: '';
             width: 20px;
@@ -66,7 +68,7 @@
     &__input:checked + .checkbox__text {
         &::after {
             position: absolute;
-            top: 7px;
+            top: 3px;
             left: 7px;
             content: '';
             display: inline-block;
