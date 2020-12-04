@@ -7,7 +7,7 @@
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <label class="checkbox checkbox--check-all flex-grow-1 input-group-text">
-                                <input type="checkbox" class="visibility-hidden checkbox__input">
+                                <input type="checkbox" class="visibility-hidden checkbox__input" v-model="checkAll" @change="isCheckAll">
                                 <span class="checkbox__text">&nbsp;</span>
                             </label>
                         </div>
@@ -25,7 +25,7 @@
                         <div v-for="(todo, index) in todos" :key="todo.id"
                             class="todo-list__item list-group-item list-group-item-action d-flex align-items-center shadow-sm">
                             <label class="checkbox flex-grow-1">
-                                <input type="checkbox" class="visibility-hidden checkbox__input">
+                                <input type="checkbox" @change="isChecked" v-model="todo.completed" class="visibility-hidden checkbox__input">
                                 <span class="checkbox__text">{{ todo.title }}</span>
                             </label>
                             <button @click="removeTodo(index)" type="button" class="todo-list__item-remove close" aria-label="Close">
@@ -46,6 +46,7 @@ export default {
     data() {
         return {
             newTodo: '',
+            checkAll: false,
             todos: [
                 {
                     id: 1,
@@ -75,10 +76,32 @@ export default {
             });
             this.newTodo = '';
         },
+        /**
+         * Method which remove todo.
+         *
+         * @param {Number} index Index by which the task is being deleted.
+         */
         removeTodo(index) {
             this.todos.splice(index, 1);
+        },
+
+        isCheckAll() {
+            this.todos.forEach(todo => {
+                todo.completed = this.checkAll;
+            });
+        },
+        isChecked() {
+            if (!this.todos.some(todo => !todo.completed))
+                this.checkAll = true;
+            else
+                this.checkAll = false;
         }
+    },
+
+    computed: {
+
     }
+
 }
 </script>
 
