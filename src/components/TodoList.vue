@@ -36,7 +36,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">footer</div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        {{ countTodoActive }} items left
+                        <button type="button" class="btn btn-info" @click="removeCompleted">Clear completed</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -101,11 +106,16 @@ export default {
          */
         isChecked() {
             this.checkAll = !this.todos.some(todo => !todo.completed);
+        },
+        removeCompleted() {
+            this.todos = this.todos.filter(todo => !todo.completed);
         }
     },
 
     computed: {
-
+        countTodoActive() {
+            return this.todos.filter(i => !i.completed).length;
+        }
     }
 
 }
