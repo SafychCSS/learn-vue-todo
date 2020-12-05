@@ -107,12 +107,21 @@ export default {
         isChecked() {
             this.checkAll = !this.todos.some(todo => !todo.completed);
         },
+
+        /**
+         * Method remove completed todo
+         */
         removeCompleted() {
             this.todos = this.todos.filter(todo => !todo.completed);
         }
     },
 
     computed: {
+        /**
+         * Count all active todo
+         *
+         * @return {number} count Count not completed todo
+         */
         countTodoActive() {
             return this.todos.filter(i => !i.completed).length;
         }
