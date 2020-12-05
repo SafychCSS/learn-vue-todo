@@ -22,18 +22,14 @@
                     </div>
                     <hr>
                     <div class="list-group">
-                        <div v-for="(todo, index) in filteredTodos" :key="todo.id"
-                            class="todo-list__item list-group-item list-group-item-action d-flex align-items-center shadow-sm">
-                            <label class="checkbox flex-grow-1">
-                                <input type="checkbox" @change="isChecked" v-model="todo.completed" class="visibility-hidden checkbox__input">
-                                <span class="checkbox__text" :class="{'checkbox__text--completed': todo.completed}">
-                                    {{ todo.title }}
-                                </span>
-                            </label>
-                            <button @click="removeTodo(index)" type="button" class="todo-list__item-remove close" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                        <todo-item
+                            v-for="(todo, index) in filteredTodos"
+                            :key="todo + index"
+                            :todo="todo"
+                            :index="index"
+                            @isChecked="isChecked"
+                            @removeTodo="removeTodo"
+                        />
                     </div>
                 </div>
                 <div class="card-footer">
@@ -54,9 +50,13 @@
 
 <script>
 import { firstLetterUpperCase } from "@/vendors/utils";
+import TodoItem from "@/components/TodoItem";
 
 export default {
     name: 'todo-list',
+    components: {
+        TodoItem
+    },
     data() {
         return {
             newTodo: '',
@@ -141,6 +141,11 @@ export default {
             return this.todos.filter(i => !i.completed).length;
         },
 
+        /**
+         * Filter todos
+         *
+         * @return {Array} Filtered todos
+         */
         filteredTodos() {
             if (this.filter === 'all')
                 return this.todos;
@@ -150,6 +155,11 @@ export default {
                 return this.todos.filter(todo => todo.completed);
         },
 
+        /**
+         * Checks completed todo
+         *
+         * @return {Boolean}
+         */
         hasTodoCompleted() {
             return this.countTodoActive === this.todos.length;
         }
