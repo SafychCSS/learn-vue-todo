@@ -22,7 +22,7 @@
                     </div>
                     <hr>
                     <div class="list-group">
-                        <div v-for="(todo, index) in todos" :key="todo.id"
+                        <div v-for="(todo, index) in filteredTodos" :key="todo.id"
                             class="todo-list__item list-group-item list-group-item-action d-flex align-items-center shadow-sm">
                             <label class="checkbox flex-grow-1">
                                 <input type="checkbox" @change="isChecked" v-model="todo.completed" class="visibility-hidden checkbox__input">
@@ -38,8 +38,13 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
-                        {{ countTodoActive }} items left
-                        <button type="button" class="btn btn-info" @click="removeCompleted">Clear completed</button>
+                        <span>{{ countTodoActive }} items left</span>
+                        <div>
+                            <select id="inputState" class="form-control" v-model="filter">
+                                <option :value="filter" v-for="(filter, index) in filtersOption" :key="filter + index">{{ filter | firstLetterBig }}</option>
+                            </select>
+                        </div>
+                        <button type="button" :disabled="hasTodoCompleted" class="btn btn-info" @click="removeCompleted">Clear completed</button>
                     </div>
                 </div>
             </div>
@@ -48,12 +53,15 @@
 </template>
 
 <script>
+import { firstLetterUpperCase } from "@/vendors/utils";
+
 export default {
     name: 'todo-list',
     data() {
         return {
             newTodo: '',
             checkAll: false,
+            filter: 'all',
             todos: [
                 {
                     id: 1,
@@ -66,8 +74,15 @@ export default {
                     title: 'Learn Laravel',
                     completed: false,
                     prevValue: ''
+                },
+                {
+                    id: 3,
+                    title: 'Learn SSR',
+                    completed: false,
+                    prevValue: ''
                 }
-            ]
+            ],
+            filtersOption: ['all', 'active', 'completed']
         }
     },
     methods: {
@@ -113,7 +128,7 @@ export default {
          */
         removeCompleted() {
             this.todos = this.todos.filter(todo => !todo.completed);
-        }
+        },
     },
 
     computed: {
@@ -124,6 +139,31 @@ export default {
          */
         countTodoActive() {
             return this.todos.filter(i => !i.completed).length;
+        },
+
+        filteredTodos() {
+            if (this.filter === 'all')
+                return this.todos;
+            else if (this.filter === 'active')
+                return this.todos.filter(todo => !todo.completed);
+            else if (this.filter === 'completed')
+                return this.todos.filter(todo => todo.completed);
+        },
+
+        hasTodoCompleted() {
+            return this.countTodoActive === this.todos.length;
+        }
+    },
+
+    filters: {
+        /**
+         * Filter which set first letter uppercase
+         *
+         * @param {String} word Word in which the first letter must be capitalized
+         * @returns {String}
+         */
+        firstLetterBig(word) {
+            return firstLetterUpperCase(word);
         }
     }
 
