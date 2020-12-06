@@ -64,6 +64,9 @@
             border: 1px solid var(--info);
         }
     }
+    &__text--completed {
+        text-decoration: line-through;
+    }
 
     &__input:checked + .checkbox__text {
         &::after {

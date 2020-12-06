@@ -1,13 +1,13 @@
 <template>
     <div class="row justify-content-center">
-        <div class="col-md-7">
+        <div class="col-lg-7 col-md-10">
             <div class="card todo-list">
                 <h4 class="card-header bg-info text-white text-center">Todos</h4>
                 <div class="card-body">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <label class="checkbox checkbox--check-all flex-grow-1 input-group-text">
-                                <input type="checkbox" class="visibility-hidden checkbox__input" v-model="checkAll" @change="isCheckAll">
+                                <input type="checkbox" class="visibility-hidden checkbox__input" @change="checkAllTodos" :checked="!hasActiveTodo">
                                 <span class="checkbox__text">&nbsp;</span>
                             </label>
                         </div>
@@ -24,11 +24,12 @@
                     <div class="list-group">
                         <todo-item
                             v-for="(todo, index) in filteredTodos"
-                            :key="todo + index"
+                            :key="todo.id"
                             :todo="todo"
                             :index="index"
-                            @isChecked="isChecked"
-                            @removeTodo="removeTodo"
+                            :checkAll="!hasActiveTodo"
+                            @doneEdit="doneEdit"
+                            @removeTodo="removeTodo(index)"
                         />
                     </div>
                 </div>
@@ -60,7 +61,6 @@ export default {
     data() {
         return {
             newTodo: '',
-            checkAll: false,
             filter: 'all',
             todos: [
                 {
@@ -110,17 +110,19 @@ export default {
         /**
          * Method which set checked all todo checkbox
          */
-        isCheckAll() {
+        checkAllTodos(event) {
             this.todos.forEach(todo => {
-                todo.completed = this.checkAll;
+                todo.completed = event.target.checked;
             });
         },
 
         /**
-         * Method which set checkAll true or false
+         * Method edit todo
+         *
+         * @param {Object} data Data from TodoItem component
          */
-        isChecked() {
-            this.checkAll = !this.todos.some(todo => !todo.completed);
+        doneEdit(data) {
+            this.todos.splice(data.index, 1, data.todo);
         },
 
         /**
@@ -162,6 +164,15 @@ export default {
          */
         hasTodoCompleted() {
             return this.countTodoActive === this.todos.length;
+        },
+
+        /**
+         * Check active todo
+         *
+         * @return {Boolean}
+         */
+        hasActiveTodo() {
+            return this.countTodoActive !== 0;
         }
     },
 
