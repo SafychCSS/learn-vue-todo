@@ -90,6 +90,9 @@ export default {
          * Method which adding new todo in todos
          */
         addTodo() {
+            if (!this.newTodo.trim())
+                return;
+
             this.todos.push({
                 id: this.todos.length + 1,
                 title: this.newTodo,
