@@ -21,7 +21,12 @@
                         <button type="button" class="btn btn-success todo-list__add" @click="addTodo">Add</button>
                     </div>
                     <hr>
-                    <div class="list-group">
+                    <transition-group
+                        class="list-group todo-list__group"
+                        name="fade"
+                        enter-active-class="animate__animated  animate__fadeInUp"
+                        leave-active-class="animate__animated  animate__fadeOutDown"
+                    >
                         <todo-item
                             v-for="(todo, index) in filteredTodos"
                             :key="todo.id"
@@ -31,7 +36,7 @@
                             @doneEdit="doneEdit"
                             @removeTodo="removeTodo(index)"
                         />
-                    </div>
+                    </transition-group>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">

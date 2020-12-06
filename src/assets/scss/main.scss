@@ -16,9 +16,13 @@
     &__title {
         margin-left: 10px;
     }
+    &__group {
+
+    }
     &__item {
         justify-content: space-between;
         padding: 0 .75rem;
+        animation-duration: .3s;
     }
     &__item-remove {
         font-size: 30px;
