@@ -72,19 +72,16 @@ export default {
                     id: 1,
                     title: 'Learn vue',
                     completed: false,
-                    prevValue: ''
                 },
                 {
                     id: 2,
                     title: 'Learn Laravel',
                     completed: false,
-                    prevValue: ''
                 },
                 {
                     id: 3,
                     title: 'Learn SSR',
                     completed: false,
-                    prevValue: ''
                 }
             ],
             filtersOption: ['all', 'active', 'completed']
@@ -102,7 +99,6 @@ export default {
                 id: this.todos.length + 1,
                 title: this.newTodo,
                 completed: false,
-                prevValue: ''
             });
             this.newTodo = '';
         },
