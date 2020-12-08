@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { bus } from "../main";
+
 export default {
     name: 'todo-item',
     props: {
@@ -66,7 +68,7 @@ export default {
          * @param {Number} idx Idx which must be deleted
          */
         removeTodo(idx) {
-            this.$emit('removeTodo', idx);
+            bus.$emit('removeTodo', idx);
         },
 
         /**
@@ -78,7 +80,7 @@ export default {
                 return;
             }
 
-            this.$emit('doneEdit', {
+            bus.$emit('doneEdit', {
                 index: this.index,
                 todo: {
                     id: this.id,
@@ -99,7 +101,6 @@ export default {
             this.editing = false;
         }
     },
-
     created() {
         const onClickOutside = e => this.editing = this.$el.contains(e.target) && this.editing;
         document.addEventListener('click', onClickOutside);

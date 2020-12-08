@@ -5,12 +5,7 @@
                 <h4 class="card-header bg-info text-white text-center">Todos</h4>
                 <div class="card-body">
                     <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <label class="checkbox checkbox--check-all flex-grow-1 input-group-text">
-                                <input type="checkbox" class="visibility-hidden checkbox__input" @change="checkAllTodos" :checked="!hasActiveTodo">
-                                <span class="checkbox__text">&nbsp;</span>
-                            </label>
-                        </div>
+                        <todo-check-all :isChecked="!hasActiveTodo" />
                         <input
                             type="text"
                             class="form-control form-control-lg"
@@ -33,20 +28,14 @@
                             :todo="todo"
                             :index="index"
                             :checkAll="!hasActiveTodo"
-                            @doneEdit="doneEdit"
-                            @removeTodo="removeTodo(index)"
                         />
                     </transition-group>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
-                        <span>{{ countTodoActive }} items left</span>
-                        <div>
-                            <select id="inputState" class="form-control" v-model="filter">
-                                <option :value="filter" v-for="(filter, index) in filtersOption" :key="filter + index">{{ filter | firstLetterBig }}</option>
-                            </select>
-                        </div>
-                        <button type="button" :disabled="hasTodoCompleted" class="btn btn-info" @click="removeCompleted">Clear completed</button>
+                        <todo-items-left :count="countTodoActive" />
+                        <todo-filters />
+                        <todo-clear-completed :isDisabled="hasTodoCompleted" />
                     </div>
                 </div>
             </div>
@@ -55,18 +44,26 @@
 </template>
 
 <script>
-import { firstLetterUpperCase } from "@/vendors/utils";
-import TodoItem from "@/components/TodoItem";
+import { bus } from '../main';
+import TodoItem from '@/components/TodoItem';
+import TodoItemsLeft from './TodoItemsLeft';
+import TodoCheckAll from './TodoCheckAll';
+import TodoFilters from './TodoFilters';
+import TodoClearCompleted from './TodoClearCompleted';
 
 export default {
     name: 'todo-list',
     components: {
-        TodoItem
+        TodoCheckAll,
+        TodoItemsLeft,
+        TodoItem,
+        TodoFilters,
+        TodoClearCompleted
     },
     data() {
         return {
-            newTodo: '',
             filter: 'all',
+            newTodo: '',
             todos: [
                 {
                     id: 1,
@@ -84,8 +81,21 @@ export default {
                     completed: false,
                 }
             ],
-            filtersOption: ['all', 'active', 'completed']
         }
+    },
+    created() {
+        bus.$on('removeTodo', index => this.removeTodo(index));
+        bus.$on('doneEdit', data => this.doneEdit(data));
+        bus.$on('checkAllTodos', checked => this.checkAllTodos(checked));
+        bus.$on('getFilter', filter => this.filter = filter);
+        bus.$on('removeCompleted', () => this.removeCompleted());
+    },
+    beforeDestroy() {
+        bus.$off('removeTodo', index => this.removeTodo(index));
+        bus.$off('doneEdit', data => this.doneEdit(data));
+        bus.$off('checkAllTodos', checked => this.checkAllTodos(checked));
+        bus.$off('getFilter', filter => this.filter = filter);
+        bus.$off('removeCompleted', () => this.removeCompleted());
     },
     methods: {
         /**
@@ -114,7 +124,7 @@ export default {
         /**
          * Method which set checked all todo checkbox
          */
-        checkAllTodos(event) {
+        checkAllTodos() {
             this.todos.forEach(todo => {
                 todo.completed = event.target.checked;
             });
@@ -179,19 +189,6 @@ export default {
             return this.countTodoActive !== 0;
         }
     },
-
-    filters: {
-        /**
-         * Filter which set first letter uppercase
-         *
-         * @param {String} word Word in which the first letter must be capitalized
-         * @returns {String}
-         */
-        firstLetterBig(word) {
-            return firstLetterUpperCase(word);
-        }
-    }
-
 }
 </script>
 
