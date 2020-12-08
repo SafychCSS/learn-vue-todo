@@ -23,10 +23,9 @@
                         leave-active-class="animate__animated  animate__fadeOutDown"
                     >
                         <todo-item
-                            v-for="(todo, index) in filteredTodos"
+                            v-for="todo in filteredTodos"
                             :key="todo.id"
                             :todo="todo"
-                            :index="index"
                             :checkAll="!hasActiveTodo"
                         />
                     </transition-group>
@@ -64,6 +63,7 @@ export default {
         return {
             filter: 'all',
             newTodo: '',
+            idForNewTodo: 4,
             todos: [
                 {
                     id: 1,
@@ -106,18 +106,20 @@ export default {
                 return;
 
             this.todos.push({
-                id: this.todos.length + 1,
+                id: this.idForNewTodo,
                 title: this.newTodo,
                 completed: false,
             });
             this.newTodo = '';
+            this.idForNewTodo += 1;
         },
         /**
          * Method which remove todo.
          *
          * @param {Number} index Index by which the task is being deleted.
          */
-        removeTodo(index) {
+        removeTodo(id) {
+            const index = this.todos.findIndex(item => item.id === id);
             this.todos.splice(index, 1);
         },
 
@@ -136,7 +138,8 @@ export default {
          * @param {Object} data Data from TodoItem component
          */
         doneEdit(data) {
-            this.todos.splice(data.index, 1, data.todo);
+            const index = this.todos.findIndex(item => item.id === data.id);
+            this.todos.splice(index, 1, data);
         },
 
         /**
