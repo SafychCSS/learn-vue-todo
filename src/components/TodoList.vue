@@ -5,7 +5,7 @@
                 <h4 class="card-header bg-info text-white text-center">Todos</h4>
                 <div class="card-body">
                     <div class="input-group mb-3">
-                        <todo-check-all :isChecked="!hasActiveTodo" />
+                        <todo-check-all />
                         <input
                             type="text"
                             class="form-control form-control-lg"
@@ -43,12 +43,13 @@
 </template>
 
 <script>
-import { bus } from '../main';
 import TodoItem from '@/components/TodoItem';
 import TodoItemsLeft from './TodoItemsLeft';
 import TodoCheckAll from './TodoCheckAll';
 import TodoFilters from './TodoFilters';
 import TodoClearCompleted from './TodoClearCompleted';
+
+import { mapGetters } from 'vuex';
 
 export default {
     name: 'todo-list',
@@ -61,41 +62,9 @@ export default {
     },
     data() {
         return {
-            filter: 'all',
             newTodo: '',
             idForNewTodo: 4,
-            todos: [
-                {
-                    id: 1,
-                    title: 'Learn vue',
-                    completed: false,
-                },
-                {
-                    id: 2,
-                    title: 'Learn Laravel',
-                    completed: false,
-                },
-                {
-                    id: 3,
-                    title: 'Learn SSR',
-                    completed: false,
-                }
-            ],
         }
-    },
-    created() {
-        bus.$on('removeTodo', index => this.removeTodo(index));
-        bus.$on('doneEdit', data => this.doneEdit(data));
-        bus.$on('checkAllTodos', checked => this.checkAllTodos(checked));
-        bus.$on('getFilter', filter => this.filter = filter);
-        bus.$on('removeCompleted', () => this.removeCompleted());
-    },
-    beforeDestroy() {
-        bus.$off('removeTodo', index => this.removeTodo(index));
-        bus.$off('doneEdit', data => this.doneEdit(data));
-        bus.$off('checkAllTodos', checked => this.checkAllTodos(checked));
-        bus.$off('getFilter', filter => this.filter = filter);
-        bus.$off('removeCompleted', () => this.removeCompleted());
     },
     methods: {
         /**
@@ -105,92 +74,23 @@ export default {
             if (!this.newTodo.trim())
                 return;
 
-            this.todos.push({
+            this.$store.commit('addTodo', {
                 id: this.idForNewTodo,
                 title: this.newTodo,
                 completed: false,
-            });
+            })
             this.newTodo = '';
             this.idForNewTodo += 1;
-        },
-        /**
-         * Method which remove todo.
-         *
-         * @param {Number} index Index by which the task is being deleted.
-         */
-        removeTodo(id) {
-            const index = this.todos.findIndex(item => item.id === id);
-            this.todos.splice(index, 1);
-        },
-
-        /**
-         * Method which set checked all todo checkbox
-         */
-        checkAllTodos() {
-            this.todos.forEach(todo => {
-                todo.completed = event.target.checked;
-            });
-        },
-
-        /**
-         * Method edit todo
-         *
-         * @param {Object} data Data from TodoItem component
-         */
-        doneEdit(data) {
-            const index = this.todos.findIndex(item => item.id === data.id);
-            this.todos.splice(index, 1, data);
-        },
-
-        /**
-         * Method remove completed todo
-         */
-        removeCompleted() {
-            this.todos = this.todos.filter(todo => !todo.completed);
         },
     },
 
     computed: {
-        /**
-         * Count all active todo
-         *
-         * @return {number} count Count not completed todo
-         */
-        countTodoActive() {
-            return this.todos.filter(i => !i.completed).length;
-        },
-
-        /**
-         * Filter todos
-         *
-         * @return {Array} Filtered todos
-         */
-        filteredTodos() {
-            if (this.filter === 'all')
-                return this.todos;
-            else if (this.filter === 'active')
-                return this.todos.filter(todo => !todo.completed);
-            else if (this.filter === 'completed')
-                return this.todos.filter(todo => todo.completed);
-        },
-
-        /**
-         * Checks completed todo
-         *
-         * @return {Boolean}
-         */
-        hasTodoCompleted() {
-            return this.countTodoActive === this.todos.length;
-        },
-
-        /**
-         * Check active todo
-         *
-         * @return {Boolean}
-         */
-        hasActiveTodo() {
-            return this.countTodoActive !== 0;
-        }
+        ...mapGetters([
+            'filteredTodos',
+            'countTodoActive',
+            'hasTodoCompleted',
+            'hasActiveTodo'
+        ]),
     },
 }
 </script>

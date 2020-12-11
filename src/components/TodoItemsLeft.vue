@@ -3,13 +3,14 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
     name: 'TodoItemsLeft',
-    props: {
-        count: {
-            type: Number,
-            required: true
-        }
+    computed: {
+        ...mapGetters({
+            count: 'countTodoActive'
+        })
     }
 }
 </script>

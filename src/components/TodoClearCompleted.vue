@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import { bus } from '../main';
 
 export default {
     name: 'TodoClearCompleted',
@@ -14,8 +13,11 @@ export default {
         }
     },
     methods: {
+        /**
+         * Method commit completed todo.
+         */
         remove() {
-            bus.$emit('removeCompleted')
+            this.$store.commit('removeCompletedTodo');
         }
     }
 }

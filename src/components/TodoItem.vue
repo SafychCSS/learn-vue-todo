@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { bus } from "../main";
 
 export default {
     name: 'todo-item',
@@ -59,23 +58,23 @@ export default {
     },
     methods: {
         /**
-         * Method emit removeTodo event to TodoList
+         * Method commit mutations for delete todo.
          *
-         * @param {Number} idx Idx which must be deleted
+         * @param {Number} id Id which must be deleted
          */
-        removeTodo() {
-            bus.$emit('removeTodo', this.id);
+        removeTodo(id) {
+            this.$store.commit('removeTodo', id);
         },
 
         /**
-         * Method emit doneEdit event, send editing todo, index
+         * Method commit editTodo
          */
         editTodo() {
             if (!this.title.trim()) {
                 this.title = this.prevValue;
             }
 
-            bus.$emit('doneEdit', {
+            this.$store.commit('editTodo', {
                 id: this.id,
                 title: this.title,
                 completed: this.completed,

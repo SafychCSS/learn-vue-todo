@@ -8,7 +8,6 @@
 
 <script>
 import { firstLetterUpperCase } from '../vendors/utils';
-import { bus } from '../main';
 
 export default {
     name: 'TodoFilters',
@@ -19,8 +18,11 @@ export default {
         }
     },
     methods: {
+        /**
+         * Method which will be commit filter
+         */
         sendFilter() {
-            bus.$emit('getFilter', this.filter);
+            this.$store.commit('changeFilter', this.filter);
         }
     },
     filters: {
