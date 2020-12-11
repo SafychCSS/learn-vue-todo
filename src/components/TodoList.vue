@@ -11,9 +11,9 @@
                             class="form-control form-control-lg"
                             placeholder="What needs to be done?"
                             v-model="newTodo"
-                            @keyup.enter="addTodo"
+                            @keyup.enter="addNewTodo"
                         >
-                        <button type="button" class="btn btn-success todo-list__add" @click="addTodo">Add</button>
+                        <button type="button" class="btn btn-success todo-list__add" @click="addNewTodo">Add</button>
                     </div>
                     <hr>
                     <transition-group
@@ -49,7 +49,7 @@ import TodoCheckAll from './TodoCheckAll';
 import TodoFilters from './TodoFilters';
 import TodoClearCompleted from './TodoClearCompleted';
 
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'todo-list',
@@ -70,18 +70,30 @@ export default {
         /**
          * Method which adding new todo in todos
          */
-        addTodo() {
+        addNewTodo() {
             if (!this.newTodo.trim())
                 return;
 
-            this.$store.commit('addTodo', {
+            this.addTodo({
                 id: this.idForNewTodo,
                 title: this.newTodo,
                 completed: false,
-            })
+            });
+
+            /* without function mapAction
+            this.$store.dispatch('addTodo', {
+                id: this.idForNewTodo,
+                title: this.newTodo,
+                completed: false,
+            })*/
+
             this.newTodo = '';
             this.idForNewTodo += 1;
         },
+
+        ...mapActions([
+            'addTodo'
+        ])
     },
 
     computed: {
