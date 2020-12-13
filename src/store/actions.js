@@ -1,3 +1,6 @@
+import axios from 'axios';
+axios.defaults.baseURL = 'http://todo.safych.com/api';
+
 const actions = {
     /**
      * Action which will be commit addTodo mutation.
@@ -6,7 +9,16 @@ const actions = {
      * @param {Object} todo The todo which be added.
      */
     addTodo(context, todo) {
-        context.commit('addTodo', todo);
+        axios.post('/todos', {
+            title: todo.title,
+            completed: todo.completed
+        })
+            .then(response => {
+                context.commit('addTodo', response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            })
     },
 
     /**
@@ -16,7 +28,16 @@ const actions = {
      * @param {Object} todo The todo which be edited.
      */
     editTodo({ commit }, todo) {
-        commit('editTodo', todo);
+        axios.patch('/todos/' + todo.id, {
+            title: todo.title,
+            completed: todo.completed
+        })
+            .then(response => {
+                commit('editTodo', response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            })
     },
 
     /**
@@ -26,7 +47,13 @@ const actions = {
      * @param {Number} id Id todo.
      */
     removeTodo({ commit }, id) {
-        commit('removeTodo', id);
+        axios.delete('/todos/' + id)
+            .then(response => {
+                commit('removeTodo', id);
+            })
+            .catch(e => {
+                console.log(e);
+            })
     },
 
     /**
@@ -34,8 +61,23 @@ const actions = {
      *
      * @param {Function} commit Method from context object.
      */
-    removeCompletedTodo({ commit }) {
-        commit('removeCompletedTodo');
+    removeCompletedTodo({ commit, state }) {
+        const completed = state.todos
+            .filter(todo => todo.completed)
+            .map(todo => todo.id)
+
+        axios.delete('/todosDeleteCompleted', {
+            data: {
+                todos: completed
+            }
+        })
+            .then(response => {
+                commit('removeCompletedTodo');
+            })
+            .catch(e => {
+                console.log(e);
+            })
+
     },
 
     /**
@@ -43,8 +85,16 @@ const actions = {
      *
      * @param {Function} commit Method from context object.
      */
-    checkAllTodos({ commit }) {
-        commit('checkAllTodos');
+    checkAllTodos({ commit }, check) {
+        axios.patch('/todosCheckAll', {
+            completed: check
+        })
+            .then(response => {
+                commit('checkAllTodos', check);
+            })
+            .catch(e => {
+                console.log(e);
+            })
     },
 
     /**
@@ -55,6 +105,21 @@ const actions = {
      */
     changeFilter({ commit }, filter) {
         commit('changeFilter', filter);
+    },
+
+    /**
+     * Action to fetch the todos.
+     *
+     * @param {Object} context The context of the store.
+     */
+    retrieveTodos(context) {
+        axios.get('/todos')
+            .then(response => {
+                context.commit('retrieveTodos', response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            })
     }
 };
 

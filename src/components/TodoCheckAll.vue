@@ -19,7 +19,7 @@ export default {
          * Method dispatch checkAllTodos action.
          */
         checkAllTodos() {
-            this.$store.dispatch('checkAllTodos')
+            this.$store.dispatch('checkAllTodos', event.target.checked)
         },
     },
     computed: {

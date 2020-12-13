@@ -63,7 +63,6 @@ export default {
     data() {
         return {
             newTodo: '',
-            idForNewTodo: 4,
         }
     },
     methods: {
@@ -75,7 +74,6 @@ export default {
                 return;
 
             this.addTodo({
-                id: this.idForNewTodo,
                 title: this.newTodo,
                 completed: false,
             });
@@ -88,11 +86,11 @@ export default {
             })*/
 
             this.newTodo = '';
-            this.idForNewTodo += 1;
         },
 
         ...mapActions([
-            'addTodo'
+            'addTodo',
+            'retrieveTodos'
         ])
     },
 
@@ -104,6 +102,9 @@ export default {
             'hasActiveTodo'
         ]),
     },
+  created() {
+      this.retrieveTodos();
+  }
 }
 </script>
 

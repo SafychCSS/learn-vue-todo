@@ -6,6 +6,7 @@ const mutations = {
      * @param {Object} todo The todo being added to the todos
      */
     addTodo(state, todo) {
+        console.log(todo);
         state.todos.push({
             id: todo.id,
             title: todo.title,
@@ -49,9 +50,9 @@ const mutations = {
      *
      * @param {Object} state The current state.
      */
-    checkAllTodos(state) {
+    checkAllTodos(state, checked) {
         state.todos.forEach(todo => {
-            todo.completed = event.target.checked;
+            todo.completed = checked;
         });
     },
 
@@ -63,6 +64,16 @@ const mutations = {
      */
     changeFilter(state, filter) {
         state.filter = filter;
+    },
+
+    /**
+     * The mutations which will be set first todos.
+     *
+     * @param {Object} state The current state.
+     * @param {Object} todos The todos from API
+     */
+    retrieveTodos(state, todos) {
+        state.todos = todos;
     }
 };
 
