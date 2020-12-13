@@ -16,10 +16,10 @@ export default {
     name: 'TodoCheckAll',
     methods: {
         /**
-         * Method which set checked all todo checkbox
+         * Method dispatch checkAllTodos action.
          */
         checkAllTodos() {
-            this.$store.commit('checkAllTodos')
+            this.$store.dispatch('checkAllTodos')
         },
     },
     computed: {

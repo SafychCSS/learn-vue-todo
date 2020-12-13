@@ -14,10 +14,10 @@ export default {
     },
     methods: {
         /**
-         * Method commit completed todo.
+         * Method dispatch removeCompletedTodo.
          */
         remove() {
-            this.$store.commit('removeCompletedTodo');
+            this.$store.dispatch('removeCompletedTodo');
         }
     }
 }

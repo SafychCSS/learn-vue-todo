@@ -22,7 +22,7 @@ export default {
          * Method which will be commit filter
          */
         sendFilter() {
-            this.$store.commit('changeFilter', this.filter);
+            this.$store.dispatch('changeFilter', this.filter);
         }
     },
     filters: {

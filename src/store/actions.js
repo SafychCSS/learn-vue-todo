@@ -27,6 +27,34 @@ const actions = {
      */
     removeTodo({ commit }, id) {
         commit('removeTodo', id);
+    },
+
+    /**
+     * Action which will be commit removeCompletedTodo mutation.
+     *
+     * @param {Function} commit Method from context object.
+     */
+    removeCompletedTodo({ commit }) {
+        commit('removeCompletedTodo');
+    },
+
+    /**
+     * Action which will be commit checkAllTodos mutation.
+     *
+     * @param {Function} commit Method from context object.
+     */
+    checkAllTodos({ commit }) {
+        commit('checkAllTodos');
+    },
+
+    /**
+     * Action which will be commit removeTodo mutation.
+     *
+     * @param {Function} commit Method from context object.
+     * @param {String} filter Filter todo.
+     */
+    changeFilter({ commit }, filter) {
+        commit('changeFilter', filter);
     }
 };
 
